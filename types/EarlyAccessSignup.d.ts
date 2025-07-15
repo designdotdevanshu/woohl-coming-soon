@@ -1,5 +1,10 @@
 import { type Document } from "mongoose";
 
+export type ApiResponse = {
+  success: boolean;
+  message: string;
+};
+
 export type EarlyAccessSignupDataType = {
   email: string;
 };

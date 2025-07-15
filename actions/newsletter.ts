@@ -26,3 +26,28 @@ export async function subscribeToEarlyAccess(data: EarlyAccessSignupDataType) {
     return { success: false, message: "Subscription failed. Try again later." };
   }
 }
+
+export async function getFormData() {
+  try {
+    await connectToDatabase();
+    return await EarlyAccessSignup.find();
+  } catch (error) {
+    console.error("Error fetching form data:", error);
+    return [];
+  }
+}
+
+/**
+ * Retrieves the total count of form entries from the database.
+ *
+ * @returns {Promise<number>} - The total number of form entries. Returns 0 in case of an error.
+ */
+export async function getFormEntriesCount(): Promise<number> {
+  try {
+    await connectToDatabase();
+    return await EarlyAccessSignup.countDocuments();
+  } catch (error) {
+    console.error("Error fetching form entries count:", error);
+    return 0;
+  }
+}
