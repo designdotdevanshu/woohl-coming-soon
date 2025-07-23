@@ -1,34 +1,16 @@
-import "./globals.css";
-import { Montserrat, Montserrat_Alternates } from "next/font/google";
+import { audiowide, montserrat, montserratAlternates } from "./fonts";
 import type { Metadata } from "next";
-
-const montserrat = Montserrat({
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
-  variable: "--font-montserrat",
-});
-
-const montserratAlternates = Montserrat_Alternates({
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
-  variable: "--font-montserrat-alt",
-});
+import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Woohl",
-  description: "Coming soon landing page",
+  title: "Woohl | India's Next Big eCommerce Experience",
+  description: "Discover a smarter way to shop online. Woohl is launching soon - bringing exclusive deals, trusted sellers, and a new kind of shopping experience to India.",
 };
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`${montserrat.variable} ${montserratAlternates.variable}`}>
-      <body className="bg-black text-white font-[var(--font-montserrat-alt)]">
-        {children}
-      </body>
+    <html lang="en" className={`${montserrat.variable} ${montserratAlternates.variable} ${audiowide.variable} antialiased`}>
+      <body className="bg-[#010609] text-white font-montserrat-alt">{children}</body>
     </html>
   );
 }
