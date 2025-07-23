@@ -215,7 +215,7 @@ export default function Home() {
 
         {/* Subheading */}
         <motion.p className="mt-6 lg:mt-8 text-gray-50 text-xl" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 1, delay: 0.6 }}>
-          Launching soon - the easiest way to start selling online
+          Launching soon
         </motion.p>
 
         {/* Email Input & CTA */}
@@ -225,7 +225,7 @@ export default function Home() {
               type="email"
               value={email}
               onChange={handleEmailChange}
-              placeholder="enter your email here...."
+              placeholder="Enter your email here...."
               className="bg-[#1a1a1a] text-white px-4 py-3 rounded-full focus:outline-none placeholder-gray-400 w-full sm:w-[80%] border border-[#333] focus:border-primary transition"
               required
               disabled={isLoading || isSubmitted}
