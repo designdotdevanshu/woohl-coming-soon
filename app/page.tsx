@@ -7,7 +7,7 @@ import moon from "@/public/moon-pic.png";
 import { Button } from "@/components/ui/stateful-button";
 import { subscribeToEarlyAccess } from "@/actions/newsletter";
 
-const DATE = "2025-09-01T17:00:00+05:30"; // Target date for countdown (5 pm IST, 1st Sep 2025)
+const DATE = "2025-10-01T17:00:00+05:30"; // Target date for countdown (5 pm IST, 1st Sep 2025)
 
 interface CountdownState {
   days: string;
