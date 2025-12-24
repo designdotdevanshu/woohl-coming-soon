@@ -13,27 +13,33 @@ const EarlyAccessSignupSchema = new Schema<EarlyAccessSignupDocument>(
       type: String,
       default: null,
       index: true,
+      maxlength: 255,
     },
     utm_source: {
       type: String,
       default: null,
       index: true,
+      maxlength: 255,
     },
     utm_medium: {
       type: String,
       default: null,
+      maxlength: 255,
     },
     utm_campaign: {
       type: String,
       default: null,
+      maxlength: 255,
     },
     utm_term: {
       type: String,
       default: null,
+      maxlength: 255,
     },
     utm_content: {
       type: String,
       default: null,
+      maxlength: 255,
     },
   },
   { timestamps: true },
