@@ -1,11 +1,12 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { getFormData } from "@/actions/newsletter";
-// import { getFormData } from "@/actions/form";
-// import { FormDataDocument } from "@/types/FormData";
 
-export async function GET() {
+export async function GET(request: NextRequest) {
+  const url = new URL(request.url);
+  const ref = url.searchParams.get("ref")?.toLowerCase() ?? null;
+
   try {
-    const data = await getFormData();
+    const data = await getFormData(ref);
 
     return NextResponse.json(data, { status: 200 });
   } catch (err) {

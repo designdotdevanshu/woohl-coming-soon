@@ -6,6 +6,8 @@ import { motion, AnimatePresence } from "motion/react";
 import moon from "@/public/moon-pic.png";
 import { Button } from "@/components/ui/stateful-button";
 import { subscribeToEarlyAccess } from "@/actions/newsletter";
+import { validateEmail } from "@/lib/validateEmail";
+import { captureAttribution, getAttribution } from "@/lib/attribution";
 
 const DATE = "2025-12-22T17:00:00+05:30"; // Target date for countdown (5 pm IST, 22nd Dec 2025)
 
@@ -20,32 +22,56 @@ export default function Home() {
   const [email, setEmail] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isSubmitted, setIsSubmitted] = useState<boolean>(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+
+  // Capture attribution params on first load
+  useEffect(() => {
+    captureAttribution();
+  }, []);
 
   const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
     setEmail(e.target.value);
+    // Clear error when user starts typing
+    if (errorMessage) setErrorMessage(null);
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault();
+    setErrorMessage(null);
+
+    const trimmedEmail = email.trim().toLowerCase();
+
+    // Client-side validation
+    const validation = validateEmail(trimmedEmail);
+    if (!validation.isValid) {
+      setErrorMessage(validation.error);
+      return;
+    }
+
     setIsLoading(true);
 
-    if (email.trim()) {
-      try {
-        const response = await subscribeToEarlyAccess({ email: email.trim().toLowerCase() });
-        if (response.success) {
-          setIsSubmitted(true);
-          setTimeout(() => {
-            setIsSubmitted(false);
-            setEmail("");
-          }, 10000);
-        } else {
-          console.error("Subscription failed:", response.message);
-        }
-      } catch (error) {
-        console.error("Error during subscription:", error);
-      } finally {
-        setIsLoading(false);
+    try {
+      // Get stored attribution params
+      const attribution = getAttribution();
+
+      const response = await subscribeToEarlyAccess({
+        email: trimmedEmail,
+        ...attribution,
+      });
+      if (response.success) {
+        setIsSubmitted(true);
+        setTimeout(() => {
+          setIsSubmitted(false);
+          setEmail("");
+        }, 10000);
+      } else {
+        setErrorMessage(response.message || "Something went wrong. Please try again.");
       }
+    } catch (error) {
+      console.error("Error during subscription:", error);
+      setErrorMessage("Something went wrong. Please try again.");
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -220,19 +246,29 @@ export default function Home() {
 
         {/* Email Input & CTA */}
         <motion.div className="flex flex-col sm:flex-row mt-6 gap-3 items-center w-full max-w-xl" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 1, delay: 0.8 }}>
-          <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-3 items-center w-full">
-            <input
-              type="email"
-              value={email}
-              onChange={handleEmailChange}
-              placeholder="Enter your email here...."
-              className="bg-[#1a1a1a] text-white px-4 py-3 rounded-full focus:outline-none placeholder-gray-400 w-full sm:w-[80%] border border-[#333] focus:border-primary transition"
-              required
-              disabled={isLoading || isSubmitted}
-            />
-            <Button type="submit" disabled={isLoading || isSubmitted || !email.trim()} isLoading={isLoading} className="h-14 w-full lg:w-60">
-              {isLoading ? "Joining..." : isSubmitted ? "Welcome aboard!" : "Join the Waitlist"}
-            </Button>
+          <form onSubmit={handleSubmit} className="flex flex-col gap-3 items-center w-full">
+            <div className="flex flex-col sm:flex-row gap-3 items-center w-full">
+              <input
+                type="email"
+                value={email}
+                onChange={handleEmailChange}
+                placeholder="Enter your email here...."
+                className={`bg-[#1a1a1a] text-white px-4 py-3 rounded-full focus:outline-none placeholder-gray-400 w-full sm:w-[80%] border transition ${
+                  errorMessage ? "border-red-500 focus:border-red-500" : "border-[#333] focus:border-primary"
+                }`}
+                required
+                disabled={isLoading || isSubmitted}
+              />
+              <Button type="submit" disabled={isLoading || isSubmitted || !email.trim()} isLoading={isLoading} className="h-14 w-full lg:w-60">
+                {isLoading ? "Joining..." : isSubmitted ? "Welcome aboard!" : "Join the Waitlist"}
+              </Button>
+            </div>
+            {/* Validation Error Message */}
+            {errorMessage && (
+              <motion.p className="text-red-400 text-sm text-center" initial={{ opacity: 0, y: -5 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.2 }}>
+                {errorMessage}
+              </motion.p>
+            )}
           </form>
         </motion.div>
 

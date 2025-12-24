@@ -1,16 +1,9 @@
 import { type NextRequest, NextResponse } from "next/server";
 import ExcelJS from "exceljs";
 import { getFormData } from "@/actions/newsletter";
+import { EarlyAccessSignupModel } from "@/types/EarlyAccessSignup";
 
-const HEADERS = ["_id", "email", "createdAt", "updatedAt"];
-
-type DataType = {
-  _id: string;
-  email: string;
-  createdAt: string;
-  updatedAt: string;
-  __v: number;
-};
+const HEADERS = ["_id", "email", "ref", "utm_source", "utm_medium", "utm_campaign", "utm_term", "utm_content", "createdAt", "updatedAt"];
 
 function formatDate(dateStr: string): string {
   const date = new Date(dateStr);
@@ -20,9 +13,10 @@ function formatDate(dateStr: string): string {
 export async function GET(request: NextRequest) {
   const url = new URL(request.url);
   const exportFormat = url.searchParams.get("format")?.toLowerCase() ?? "json";
+  const ref = url.searchParams.get("ref")?.toLowerCase() ?? null;
 
   try {
-    const data: DataType[] = await getFormData();
+    const data: EarlyAccessSignupModel[] = await getFormData(ref);
 
     const responseHandlers: Record<string, () => Response | Promise<Response>> = {
       csv: () => streamCSV(data),
@@ -51,7 +45,7 @@ function sanitizeCSV(value: unknown): string {
   return /[",\n]/.test(str) ? `"${str}"` : str;
 }
 
-function streamCSV(data: DataType[]): Response {
+function streamCSV(data: EarlyAccessSignupModel[]): Response {
   const encoder = new TextEncoder();
 
   const stream = new ReadableStream({
@@ -59,7 +53,9 @@ function streamCSV(data: DataType[]): Response {
       controller.enqueue(encoder.encode(HEADERS.join(",") + "\n"));
 
       for (const row of data) {
-        const line = [row._id, row.email, formatDate(row.createdAt), formatDate(row.updatedAt)].map(sanitizeCSV).join(",");
+        const line = [row._id, row.email, row.ref ?? "", row.utm_source ?? "", row.utm_medium ?? "", row.utm_campaign ?? "", row.utm_term ?? "", row.utm_content ?? "", formatDate(row.createdAt), formatDate(row.updatedAt)]
+          .map(sanitizeCSV)
+          .join(",");
 
         controller.enqueue(encoder.encode(line + "\n"));
       }
@@ -76,14 +72,14 @@ function streamCSV(data: DataType[]): Response {
   });
 }
 
-async function generateXLSX(data: DataType[]): Promise<Response> {
+async function generateXLSX(data: EarlyAccessSignupModel[]): Promise<Response> {
   const workbook = new ExcelJS.Workbook();
-  const worksheet = workbook.addWorksheet("Form DataType");
+  const worksheet = workbook.addWorksheet("Form EarlyAccessSignupModel");
 
   worksheet.addRow(HEADERS);
 
   for (const row of data) {
-    worksheet.addRow([row._id, row.email, formatDate(row.createdAt), formatDate(row.updatedAt)]);
+    worksheet.addRow([row._id, row.email, row.ref ?? "", row.utm_source ?? "", row.utm_medium ?? "", row.utm_campaign ?? "", row.utm_term ?? "", row.utm_content ?? "", formatDate(row.createdAt), formatDate(row.updatedAt)]);
   }
 
   const buffer = await workbook.xlsx.writeBuffer();
