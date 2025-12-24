@@ -28,10 +28,10 @@ export async function subscribeToEarlyAccess(data: EarlyAccessSignupDataType) {
 }
 
 export async function getFormData(ref?: string | null): Promise<EarlyAccessSignupModel[]> {
-  ref = ref?.toLowerCase() ?? null;
+  const query = ref ? { ref } : {};
   try {
     await connectToDatabase();
-    return await EarlyAccessSignup.find({ ref });
+    return await EarlyAccessSignup.find(query);
   } catch (error) {
     console.error("Error fetching form data:", error);
     return [];
