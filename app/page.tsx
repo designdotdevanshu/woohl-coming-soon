@@ -9,7 +9,7 @@ import { subscribeToEarlyAccess } from "@/actions/newsletter";
 import { validateEmail } from "@/lib/validateEmail";
 import { captureAttribution, getAttribution } from "@/lib/attribution";
 
-const DATE = "2026-01-10T17:00:00+05:30"; // Target date for countdown (5 pm IST, Jan 10, 2026)
+const DATE = "2026-01-26T17:00:00+05:30"; // Target date for countdown (5 pm IST, Jan 26, 2026)
 
 interface CountdownState {
   days: string;
