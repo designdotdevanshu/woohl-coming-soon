@@ -1,0 +1,46 @@
+[
+  {
+    "id": "tanishk-arora",
+    "name": "Tanishk Arora",
+    "role": "Co-founder & CEO",
+    "colorClass": "from-red-400 to-orange-500",
+    "social": {
+      "email": "tanishk.arora@woohl.com",
+      "linkedin": "https://www.linkedin.com/in/tanishk-arora-6a2502220"
+    }
+  },
+  {
+    "id": "devanshu-sagar",
+    "name": "Devanshu Sagar",
+    "role": "Co-Founder & CTO",
+    "colorClass": "from-red-400 to-orange-500",
+    "social": {
+      "email": "design.devanshu@gmail.com",
+      "linkedin": "https://www.linkedin.com/in/designdotdevanshu"
+    }
+  },
+  {
+    "id": "pratham-kumar",
+    "name": "Pratham Kumar",
+    "role": "Growth & Marketing Head",
+    "colorClass": "from-red-400 to-orange-500"
+  },
+  {
+    "id": "yash-chaoudhary",
+    "name": "Yash Chaoudhary",
+    "role": "Head of Supply Chain & Logistics",
+    "colorClass": "from-red-400 to-orange-500"
+  },
+  {
+    "id": "urvi-harit",
+    "name": "Urvi Harit",
+    "role": "HR Head",
+    "colorClass": "from-red-400 to-orange-500"
+  },
+  {
+    "id": "yash-raj",
+    "name": "Yash Raj",
+    "role": "Sales & Growth Lead",
+    "colorClass": "from-red-400 to-orange-500"
+  }
+]
